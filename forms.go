@@ -42,12 +42,21 @@ func reader(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "_thanks_\n")
 }
 
+func gorilla(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	title := vars["title"]
+	page := vars["page"]
+
+	fmt.Fprintf(w, "You've requested the book: %s on page %s\n", title, page)
+}
+
 func main() {
 
 	r := mux.NewRouter()
 
 	r.HandleFunc("/info", info)
 	r.HandleFunc("/", reader)
+	r.HandleFunc("/books/{title}/page/{page}", gorilla)
 
 	http.ListenAndServe(":4080", r)
 }
