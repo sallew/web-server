@@ -9,13 +9,37 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type user struct {
+	Name string
+}
+
 type contactDetails struct {
 	Email   string
 	Subject string
 	Message string
 }
 
+type student struct {
+	Id   int
+	Name string
+}
+
 var details contactDetails
+var data user
+
+func names(w http.ResponseWriter, r *http.Request) {
+	tmplt := template.Must(template.ParseFiles("names.html"))
+	p := student{Id: 1, Name: "Aisha"}
+	w.Header().Set("Content-Type", "text/html")
+	tmplt.Execute(w, p)
+}
+
+func hello(w http.ResponseWriter, req *http.Request) {
+	tmpl := template.Must(template.ParseFiles("hello.gohtml"))
+	data.Name = "Jon Smith"
+	w.Header().Set("Content-Type", "text/html")
+	tmpl.Execute(w, data)
+}
 
 func info(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "_info_\n")
@@ -35,9 +59,6 @@ func reader(w http.ResponseWriter, r *http.Request) {
 	details.Subject = r.FormValue("subject")
 	details.Message = r.FormValue("message")
 
-	// do something with details
-	// _ = details
-
 	// tmpl.Execute(w, struct{ Success bool }{true})
 	fmt.Fprintf(w, "_thanks_\n")
 }
@@ -54,6 +75,8 @@ func main() {
 
 	r := mux.NewRouter()
 
+	r.HandleFunc("/names", names)
+	r.HandleFunc("/hello", hello)
 	r.HandleFunc("/info", info)
 	r.HandleFunc("/", reader)
 	r.HandleFunc("/books/{title}/page/{page}", gorilla)
