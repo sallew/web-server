@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
-type ContactDetails struct {
+type contactDetails struct {
 	Email   string
 	Subject string
 	Message string
 }
 
-var details ContactDetails
+var details contactDetails
 
 func info(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "_info_\n")
@@ -42,8 +44,10 @@ func reader(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	http.HandleFunc("/info", info)
-	http.HandleFunc("/", reader)
+	r := mux.NewRouter()
 
-	http.ListenAndServe(":4080", nil)
+	r.HandleFunc("/info", info)
+	r.HandleFunc("/", reader)
+
+	http.ListenAndServe(":4080", r)
 }
