@@ -20,7 +20,7 @@ type contactDetails struct {
 }
 
 type student struct {
-	Id   int
+	id   int
 	Name string
 }
 
@@ -29,7 +29,7 @@ var data user
 
 func names(w http.ResponseWriter, r *http.Request) {
 	tmplt := template.Must(template.ParseFiles("names.html"))
-	p := student{Id: 1, Name: "Aisha"}
+	p := student{id: 1, Name: "Aisha"}
 	w.Header().Set("Content-Type", "text/html")
 	tmplt.Execute(w, p)
 }
@@ -59,8 +59,9 @@ func reader(w http.ResponseWriter, r *http.Request) {
 	details.Subject = r.FormValue("subject")
 	details.Message = r.FormValue("message")
 
-	// tmpl.Execute(w, struct{ Success bool }{true})
-	fmt.Fprintf(w, "_thanks_\n")
+	//tmpl.Execute(w, struct{ Success bool }{true})
+	http.Redirect(w, r, "/info", http.StatusSeeOther)
+	//fmt.Fprintf(w, "_thanks_\n")
 }
 
 func gorilla(w http.ResponseWriter, r *http.Request) {
