@@ -27,6 +27,10 @@ type student struct {
 var details contactDetails
 var data user
 
+func init() {
+	fmt.Println("Initializing")
+}
+
 func names(w http.ResponseWriter, r *http.Request) {
 	tmplt := template.Must(template.ParseFiles("names.html"))
 	p := student{id: 1, Name: "Aisha"}
